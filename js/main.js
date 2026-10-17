@@ -11,7 +11,7 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 let currentBuffer = null;
 
-const waveform = new Waveform($('waveform'), {
+const waveform = new Waveform($('waveform'), $('overview'), {
   onSeek: (f) => {
     // Clicking clears any selection and seeks.
     clearSelection();
@@ -23,6 +23,11 @@ const waveform = new Waveform($('waveform'), {
     $('selection-info').textContent = `${fmt(region.start)} – ${fmt(region.end)}`;
     player.seek(region.start);
     stftPanel.onSelectionChange(region);
+  },
+  onViewChange: ({ start, end }) => {
+    const z = 1 / (end - start);
+    $('zoom-level').textContent = `${z < 10 ? z.toFixed(1) : Math.round(z)}×`;
+    $('zoom-out').disabled = $('zoom-fit').disabled = end - start >= 1;
   },
 });
 
@@ -80,10 +85,35 @@ $('play').addEventListener('click', () => player.toggle());
 $('stop').addEventListener('click', () => player.stop());
 $('clear').addEventListener('click', clearSelection);
 $('loop').addEventListener('change', (e) => { player.loop = e.target.checked; });
+$('zoom-in').addEventListener('click', () => waveform.zoom(2));
+$('zoom-out').addEventListener('click', () => waveform.zoom(0.5));
+$('zoom-fit').addEventListener('click', () => waveform.fit());
+
+// Theme: follows the system until the user picks one with the toggle.
+const darkQuery = matchMedia('(prefers-color-scheme: dark)');
+const isDark = () => (document.documentElement.dataset.theme ?? (darkQuery.matches ? 'dark' : 'light')) === 'dark';
+function syncTheme() {
+  $('theme').textContent = isDark() ? '☀' : '☾';
+  $('theme').ariaLabel = isDark() ? 'Switch to light mode' : 'Switch to dark mode';
+  waveform.refreshColors();
+}
+$('theme').addEventListener('click', () => {
+  const next = isDark() ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem('theme', next); } catch {}
+  syncTheme();
+});
+darkQuery.addEventListener('change', syncTheme);
+syncTheme();
+
+const ZOOM_KEYS = { '=': () => waveform.zoom(2), '+': () => waveform.zoom(2), '-': () => waveform.zoom(0.5), '0': () => waveform.fit() };
 
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space' && !$('player').hidden && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') {
     e.preventDefault();
     player.toggle();
+  } else if (ZOOM_KEYS[e.key] && !$('player').hidden && e.target.tagName !== 'INPUT' && !e.ctrlKey && !e.metaKey) {
+    e.preventDefault();
+    ZOOM_KEYS[e.key]();
   }
 });

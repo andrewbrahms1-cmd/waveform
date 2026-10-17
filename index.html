@@ -5,10 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Waveform Player</title>
   <link rel="stylesheet" href="css/style.css" />
+  <script>
+    // Apply a saved theme before first paint to avoid a flash.
+    try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch {}
+  </script>
 </head>
 <body>
   <main class="app">
-    <h1>Waveform Player</h1>
+    <header class="top">
+      <h1>Waveform Player</h1>
+      <button id="theme" class="secondary" aria-label="Switch to dark mode">☾</button>
+    </header>
 
     <label class="dropzone" id="dropzone">
       <input type="file" id="file-input" accept="audio/*" hidden />
@@ -17,7 +24,10 @@
 
     <section class="player" id="player" hidden>
       <div class="wave-wrap">
-        <canvas id="waveform" aria-label="Audio waveform. Drag to select a section, click to seek."></canvas>
+        <canvas id="waveform" aria-label="Audio waveform. Drag to select a section, click to seek, scroll to zoom."></canvas>
+      </div>
+      <div class="wave-wrap overview-wrap">
+        <canvas id="overview" class="overview" aria-label="Whole-file overview. Drag to scroll the zoomed view."></canvas>
       </div>
 
       <div class="time">
@@ -31,26 +41,43 @@
         <button id="stop" aria-label="Stop">■</button>
         <label class="toggle"><input type="checkbox" id="loop" /> Loop selection</label>
         <button id="clear" class="secondary">Clear selection</button>
+        <div class="zoom" role="group" aria-label="Zoom">
+          <button id="zoom-out" class="secondary" aria-label="Zoom out">−</button>
+          <output id="zoom-level">1.0×</output>
+          <button id="zoom-in" class="secondary" aria-label="Zoom in">+</button>
+          <button id="zoom-fit" class="secondary">Fit</button>
+        </div>
       </div>
-      <p class="hint">Click to seek · Drag to select · Space to play/pause</p>
+      <p class="hint">Click to seek · Drag to select · Space to play/pause · Scroll or pinch to zoom at the cursor (+ / − / 0 keys) · Shift+scroll or drag the overview to pan</p>
 
       <section class="stft" aria-labelledby="stft-title">
         <h2 id="stft-title">Spectrogram (STFT)</h2>
         <div class="sliders">
-          <label>
-            Window length <output id="win-out"></output>
-            <input type="range" id="win" min="7" max="14" step="1" value="11" />
+          <label class="win-field">
+            Window length
+            <span class="win-row">
+              <input type="number" id="win-num" min="2" step="1" value="2048" />
+              <output id="win-out"></output>
+            </span>
+            <input type="range" id="win" min="0" max="1000" step="1" aria-label="Window length, log scale" />
           </label>
           <label>
             Overlap <output id="ovl-out"></output>
             <input type="range" id="ovl" min="0" max="90" step="5" value="75" />
           </label>
           <button id="analyze">Analyze selection</button>
+          <div class="zoom" role="group" aria-label="Frequency zoom">
+            <button id="fzoom-out" class="secondary" aria-label="Zoom out frequency">−</button>
+            <output id="fzoom-level">1.0×</output>
+            <button id="fzoom-in" class="secondary" aria-label="Zoom in frequency">+</button>
+            <button id="fzoom-fit" class="secondary">Fit</button>
+          </div>
         </div>
         <p class="hint" id="stft-status">Select a section of the waveform, then click Analyze.</p>
         <div class="wave-wrap" id="spec-wrap" hidden>
-          <canvas id="spectrogram" class="spec" aria-label="Spectrogram of the selected section"></canvas>
+          <canvas id="spectrogram" class="spec" aria-label="Spectrogram of the selected section. Scroll to zoom frequency, drag to pan."></canvas>
         </div>
+        <p class="hint" id="spec-hint" hidden>Scroll or pinch to zoom frequency at the cursor · Drag to pan · Double-click to reset</p>
       </section>
     </section>
   </main>
