@@ -8,6 +8,8 @@ const TICK_SPACING = 90;        // target CSS px between ruler labels
 const TICK_STEPS = [0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5,
   1, 2, 5, 10, 15, 30, 60, 120, 300, 600, 1800, 3600];
 
+const MONO = '"JetBrains Mono", ui-monospace, Consolas, monospace'; // canvas label font, matches --font-mono
+
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 
 function fmtTime(t, decimals) {
@@ -224,7 +226,7 @@ export class Waveform {
     const want = ((t1 - t0) / canvas.clientWidth) * TICK_SPACING;
     const step = TICK_STEPS.find((s) => s >= want) ?? TICK_STEPS.at(-1);
     const decimals = step < 0.001 ? 4 : step < 0.01 ? 3 : step < 0.1 ? 2 : step < 1 ? 1 : 0;
-    ctx.font = `${10 * dpr}px system-ui, sans-serif`;
+    ctx.font = `${10 * dpr}px ${MONO}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     for (let k = Math.ceil(t0 / step); k * step <= t1; k++) {

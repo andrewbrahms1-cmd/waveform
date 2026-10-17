@@ -1,7 +1,7 @@
 // Renders STFT output onto a canvas with a colormap and simple axes.
 
 const DB_RANGE = 90;     // dynamic range shown below the peak, in dB
-export const AXIS_W = 44; // left gutter for frequency labels (CSS px)
+export const AXIS_W = 54; // left gutter for frequency labels (CSS px)
 export const AXIS_H = 18; // bottom gutter for time labels (CSS px)
 
 /** Dark-blue → purple → orange → yellow colormap, t in 0..1. */
@@ -83,7 +83,7 @@ export function drawSpectrogram(canvas, spec, { sampleRate, startSec, endSec }, 
 
   // Axes
   ctx.fillStyle = '#888';
-  ctx.font = '10px system-ui, sans-serif';
+  ctx.font = '10px "JetBrains Mono", ui-monospace, Consolas, monospace';
   ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
   const step = niceStep(hi - lo, 8);
   for (let k = Math.ceil(lo / step); k * step <= hi; k++) {

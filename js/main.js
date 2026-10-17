@@ -105,6 +105,8 @@ $('theme').addEventListener('click', () => {
 });
 darkQuery.addEventListener('change', syncTheme);
 syncTheme();
+// Canvas text doesn't re-render by itself when web fonts arrive, so repaint once they have.
+document.fonts?.ready.then(() => waveform.draw());
 
 const ZOOM_KEYS = { '=': () => waveform.zoom(2), '+': () => waveform.zoom(2), '-': () => waveform.zoom(0.5), '0': () => waveform.fit() };
 
