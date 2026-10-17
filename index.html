@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Waveform Player</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="app">
+    <h1>Waveform Player</h1>
+
+    <label class="dropzone" id="dropzone">
+      <input type="file" id="file-input" accept="audio/*" hidden />
+      <span id="file-label">Drop an audio file or click to upload</span>
+    </label>
+
+    <section class="player" id="player" hidden>
+      <div class="wave-wrap">
+        <canvas id="waveform" aria-label="Audio waveform. Drag to select a section, click to seek."></canvas>
+      </div>
+
+      <div class="time">
+        <span id="current">0:00</span>
+        <span id="selection-info"></span>
+        <span id="duration">0:00</span>
+      </div>
+
+      <div class="controls">
+        <button id="play" aria-label="Play">▶</button>
+        <button id="stop" aria-label="Stop">■</button>
+        <label class="toggle"><input type="checkbox" id="loop" /> Loop selection</label>
+        <button id="clear" class="secondary">Clear selection</button>
+      </div>
+      <p class="hint">Click to seek · Drag to select · Space to play/pause</p>
+
+      <section class="stft" aria-labelledby="stft-title">
+        <h2 id="stft-title">Spectrogram (STFT)</h2>
+        <div class="sliders">
+          <label>
+            Window length <output id="win-out"></output>
+            <input type="range" id="win" min="7" max="14" step="1" value="11" />
+          </label>
+          <label>
+            Overlap <output id="ovl-out"></output>
+            <input type="range" id="ovl" min="0" max="90" step="5" value="75" />
+          </label>
+          <button id="analyze">Analyze selection</button>
+        </div>
+        <p class="hint" id="stft-status">Select a section of the waveform, then click Analyze.</p>
+        <div class="wave-wrap" id="spec-wrap" hidden>
+          <canvas id="spectrogram" class="spec" aria-label="Spectrogram of the selected section"></canvas>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

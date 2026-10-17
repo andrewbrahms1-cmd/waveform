@@ -1,0 +1,86 @@
+:root {
+  --bg: #fafafa;
+  --fg: #222;
+  --muted: #888;
+  --accent: #3b6cf6;
+  --wave: #c5c9d3;
+  --sel: rgba(59, 108, 246, 0.15);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.app {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+}
+
+h1 { font-weight: 500; font-size: 1.5rem; margin: 0 0 1.5rem; }
+
+.dropzone {
+  display: block;
+  padding: 2rem;
+  border: 1.5px dashed var(--wave);
+  border-radius: 10px;
+  text-align: center;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+.dropzone:hover, .dropzone.dragover { border-color: var(--accent); background: #fff; }
+
+.player { margin-top: 2rem; }
+
+.wave-wrap {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+canvas { display: block; width: 100%; height: 140px; cursor: text; }
+
+.time {
+  display: flex;
+  justify-content: space-between;
+  font-size: .85rem;
+  color: var(--muted);
+  margin: .5rem 0 1rem;
+  font-variant-numeric: tabular-nums;
+}
+#selection-info { color: var(--accent); }
+
+.controls { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+
+button {
+  border: none;
+  background: var(--fg);
+  color: #fff;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 1rem;
+  border-radius: 22px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+button.secondary { background: transparent; color: var(--fg); border: 1px solid var(--wave); font-size: .85rem; }
+button:focus-visible, .dropzone:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.toggle { font-size: .9rem; display: flex; gap: .35rem; align-items: center; }
+.hint { font-size: .8rem; color: var(--muted); margin-top: 1.25rem; }
+
+/* ---- STFT panel ---- */
+.stft { margin-top: 2.5rem; border-top: 1px solid #eee; padding-top: 1.5rem; }
+.stft h2 { font-size: 1.05rem; font-weight: 500; margin: 0 0 1rem; }
+.sliders { display: flex; gap: 1.5rem; align-items: end; flex-wrap: wrap; }
+.sliders label { display: flex; flex-direction: column; gap: .35rem; font-size: .85rem; min-width: 180px; }
+.sliders output { color: var(--muted); font-variant-numeric: tabular-nums; }
+.sliders input[type="range"] { accent-color: var(--accent); }
+button:disabled { opacity: .4; cursor: not-allowed; }
+canvas.spec { height: 260px; cursor: default; }
+#spec-wrap { padding: .5rem; }
