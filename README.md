@@ -1,1 +1,1 @@
->> Online simple waveform/STFT visualization tool
+Online simple waveform/STFT visualization tool.
